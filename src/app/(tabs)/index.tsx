@@ -1,35 +1,57 @@
-import { StyleSheet } from "react-native";
+import { Image, ScrollView, StyleSheet } from "react-native";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
+import Colors from "@/constants/Colors";
+import { Product } from "@/types";
+
+import products from "~/assets/data/products";
+
+export const defaultPizzaImage =
+  "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/peperoni.png";
+
+type ProductListItemProps = {
+  product: Product;
+};
+
+const ProductListItem = ({ product }: ProductListItemProps) => {
+  return (
+    <View style={styles.container}>
+      <Image
+        source={{ uri: product.image || defaultPizzaImage }}
+        style={styles.image}
+      />
+      <Text style={styles.title}>{product.name}</Text>
+      <Text style={styles.price}>$12.99</Text>
+    </View>
+  );
+};
 
 export default function TabOneScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hello World</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <ScrollView>
+      <ProductListItem product={products[1]} />
+      <ProductListItem product={products[5]} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 20,
+  },
+
+  image: {
+    width: "100%",
+    aspectRatio: 1,
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "600",
+    marginVertical: 10,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  price: {
+    color: Colors.light.tint,
   },
 });
