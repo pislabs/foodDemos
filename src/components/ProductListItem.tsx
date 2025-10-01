@@ -25,7 +25,7 @@ export const ProductListItem = ({ product }: ProductListItemProps) => {
           resizeMode="contain"
         />
         <Text style={styles.title}>{product.name}</Text>
-        <Text style={styles.price}>$12.99</Text>
+        <Text style={styles.price}>${product.price}</Text>
       </Pressable>
     </Link>
   );
