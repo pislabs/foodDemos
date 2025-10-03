@@ -1,41 +1,48 @@
 import { Stack, useLocalSearchParams } from "expo-router";
-import { FlatList, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 
-// import { useOrderDetails } from "@/api/orders";
-// import { useUpdateOrderSubscription } from "@/api/orders/subscriptions";
+import { useOrderDetails, useUpdateOrder } from "@/api/orders";
+import { useUpdateOrderSubscription } from "@/api/orders/subscriptions";
 
 import { OrderStatusList } from "@/types";
 
 import OrderItemListItem from "@/components/OrderItemListItem";
 import OrderListItem from "@/components/OrderListItem";
 import Colors from "@/constants/Colors";
-import orders from "@assets/data/orders";
 
 export default function OrderDetailsScreen() {
   const { id: idString } = useLocalSearchParams();
   const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
 
-  const order = orders.find((it) => it.id === id);
+  const { data: order, isLoading, error } = useOrderDetails(id);
+  const { mutate: updateOrder } = useUpdateOrder();
 
-  // const { data: order, isLoading, error } = useOrderDetails(id);
-  // const { mutate: updateOrder } = useUpdateOrder();
+  useUpdateOrderSubscription(id);
 
   const updateStatus = async (status: string) => {
-    // await updateOrder({
-    //   id: id,
-    //   updatedFields: { status },
-    // });
+    await updateOrder({
+      id: id,
+      updatedFields: { status },
+    });
+
     // if (order) {
     //   await notifyUserAboutOrderUpdate({ ...order, status });
     // }
   };
 
-  // if (isLoading) {
-  //   return <ActivityIndicator />;
-  // }
-  // if (error || !order) {
-  //   return <Text>Failed to fetch</Text>;
-  // }
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error || !order) {
+    return <Text>Failed to fetch</Text>;
+  }
 
   if (!order) {
     return <Text>Not found</Text>;
@@ -46,7 +53,7 @@ export default function OrderDetailsScreen() {
       <Stack.Screen options={{ title: `Order #${id}` }} />
 
       <FlatList
-        data={order.order_items}
+        data={order.order_items || []}
         renderItem={({ item }) => <OrderItemListItem item={item} />}
         contentContainerStyle={{ gap: 10 }}
         ListHeaderComponent={() => <OrderListItem order={order} />}
