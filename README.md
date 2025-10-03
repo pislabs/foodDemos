@@ -9,6 +9,13 @@ npx create-expo-app@latest foodDemos -t
 
 ```
 
+# Supabase
+
+```bash
+# 生成supabase typescript
+npx supabase gen types typescript --project-id acnopaldoudvqyoprilr > src/database.types.ts
+```
+
 # 参考
 
 - 源码：https://github.com/notJust-dev/FoodOrdering

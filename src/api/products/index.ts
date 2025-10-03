@@ -119,7 +119,7 @@ export const useDeleteProduct = () => {
       }
     },
 
-    async onSuccess(_, { id }) {
+    async onSuccess(_, id) {
       await queryClient.invalidateQueries({
         queryKey: ["products"],
       });
