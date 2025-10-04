@@ -51,6 +51,18 @@ npx supabase functions deploy payment-sheet
 # sk_test_51SEVu53Fb8ekroNeFTY7kfJQkP96yDDtq0CLl2FM3L4sh2BDcDAmXhaMMRGEO9AdIEr6zVgwMcdoy0Wdnc3w5gq200VEN93Y8b
 ```
 
+# Notification
+
+```bash
+
+# 安装expo eas
+npm install --global eas-cli
+
+eas login
+
+eas build:configure
+```
+
 # 参考
 
 - 源码：https://github.com/notJust-dev/FoodOrdering
