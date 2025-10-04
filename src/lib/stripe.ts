@@ -1,7 +1,7 @@
-import {
-  initPaymentSheet,
-  presentPaymentSheet,
-} from "@stripe/stripe-react-native";
+// import {
+//   initPaymentSheet,
+//   presentPaymentSheet,
+// } from "@stripe/stripe-react-native";
 import { Alert } from "react-native";
 import { supabase } from "./supabase";
 
@@ -37,25 +37,25 @@ export const initialisePaymentSheet = async (amount: number) => {
 
   if (!paymentIntent || !publishableKey) return;
 
-  const result = await initPaymentSheet({
-    merchantDisplayName: "foodDemos",
-    paymentIntentClientSecret: paymentIntent,
-    customerId: customer,
-    customerEphemeralKeySecret: ephemeralKey,
-    defaultBillingDetails: {
-      name: "rayl",
-    },
-  });
+  // const result = await initPaymentSheet({
+  //   merchantDisplayName: "foodDemos",
+  //   paymentIntentClientSecret: paymentIntent,
+  //   customerId: customer,
+  //   customerEphemeralKeySecret: ephemeralKey,
+  //   defaultBillingDetails: {
+  //     name: "rayl",
+  //   },
+  // });
 
-  console.log(result);
+  // console.log(result);
 };
 
 export const openPaymentSheet = async () => {
-  const { error } = await presentPaymentSheet();
+  // const { error } = await presentPaymentSheet();
 
-  if (error) {
-    Alert.alert(error.message);
-    return false;
-  }
+  // if (error) {
+  //   Alert.alert(error.message);
+  //   return false;
+  // }
   return true;
 };

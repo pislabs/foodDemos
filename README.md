@@ -61,6 +61,8 @@ npm install --global eas-cli
 eas login
 
 eas build:configure
+
+npx expo install expo-notifications expo-device expo-constants
 ```
 
 # 参考
