@@ -1,7 +1,10 @@
+import { decode } from "base64-arraybuffer";
+import { randomUUID } from "expo-crypto";
+import { File } from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
 
 import {
   useDeleteProduct,
@@ -11,12 +14,14 @@ import {
 } from "@/api/products";
 import Button from "@/components/Button";
 import { defaultPizzaImage } from "@/components/ProductListItem";
+import RemoteImage from "@/components/RemoteImage";
 import Colors from "@/constants/Colors";
+import { supabase } from "@/lib/supabase";
 
 const CreateProductScreen = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
 
   const [errors, setErrors] = useState("");
 
@@ -73,13 +78,17 @@ const CreateProductScreen = () => {
     }
   };
 
-  const onUpdate = () => {
+  const onUpdate = async () => {
     if (!validateInput()) {
       return;
     }
 
+    const imagePath = await uploadImage();
+
+    console.log("imagePath -------->", imagePath);
+
     updateProduct(
-      { id, name, price: parseFloat(price), image },
+      { id, name, price: parseFloat(price), image: imagePath },
       {
         onSuccess: () => {
           resetFields();
@@ -91,13 +100,17 @@ const CreateProductScreen = () => {
     resetFields();
   };
 
-  const onCreate = () => {
+  const onCreate = async () => {
     if (!validateInput()) {
       return;
     }
 
+    const imagePath = await uploadImage();
+
+    console.log("imagePath -------->", imagePath);
+
     insertProduct(
-      { name, price: parseFloat(price), image },
+      { name, price: parseFloat(price), image: imagePath },
       {
         onSuccess: () => {
           resetFields();
@@ -137,10 +150,36 @@ const CreateProductScreen = () => {
       quality: 0.5,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
+      console.log("pickImage -----------> uri:", result.assets[0].uri);
+
       setImage(result.assets[0].uri);
+    }
+  };
+
+  const uploadImage = async () => {
+    console.log("uploadImage ---------> image:", image);
+
+    if (!image?.startsWith("file://")) {
+      return;
+    }
+
+    const base64 = await new File(image).base64();
+
+    // const base64 = await FileSystem.readAsStringAsync(image, {
+    //   encoding: "base64",
+    // });
+
+    const filePath = `${randomUUID()}.png`;
+    const contentType = "image/png";
+    const { data, error } = await supabase.storage
+      .from("product-images")
+      .upload(filePath, decode(base64), { contentType });
+
+    console.log("uploadImage ---------> data:", data);
+
+    if (data) {
+      return data.path;
     }
   };
 
@@ -150,10 +189,17 @@ const CreateProductScreen = () => {
         options={{ title: isUpdating ? "Update Product" : "Create Product" }}
       />
 
-      <Image
+      {/* <Image
         source={{ uri: image || defaultPizzaImage }}
         style={styles.image}
+      /> */}
+
+      <RemoteImage
+        path={image}
+        fallback={defaultPizzaImage}
+        style={styles.image}
       />
+
       <Text onPress={pickImage} style={styles.textButton}>
         Select Image
       </Text>

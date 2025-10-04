@@ -19,8 +19,10 @@ export default function TabLayout() {
 
   const { session } = useAuth();
 
+  console.log("user Layout -------->", session);
+
   if (!session) {
-    return <Redirect href={"/"}></Redirect>;
+    return <Redirect href={"/sign-in"}></Redirect>;
   }
 
   return (
@@ -48,6 +50,13 @@ export default function TabLayout() {
           title: "Orders",
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </Tabs>

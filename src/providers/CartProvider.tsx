@@ -4,6 +4,7 @@ import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { useInsertOrderItems } from "@/api/order-items";
 import { useInsertOrder } from "@/api/orders";
 import { Tables } from "@/database.types";
+import { initialisePaymentSheet, openPaymentSheet } from "@/lib/stripe";
 import { CartItem, Product } from "@/types";
 import { router } from "expo-router";
 
@@ -69,8 +70,16 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     setItems([]);
   };
 
-  const checkout = () => {
+  const checkout = async () => {
     console.warn("checkout ------->", total);
+
+    await initialisePaymentSheet(Math.floor(total * 100));
+    const payed = await openPaymentSheet();
+
+    if (!payed) {
+      return;
+    }
+
     insertOrder(
       { total },
       {

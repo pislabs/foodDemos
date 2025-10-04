@@ -1,4 +1,4 @@
-import { Link, Stack } from "expo-router";
+import { Link, router, Stack } from "expo-router";
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -12,6 +12,8 @@ const SignInScreen = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  console.log("SignInScreen -------->");
+
   async function signInWithEmail() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
@@ -20,7 +22,10 @@ const SignInScreen = () => {
     });
 
     if (error) Alert.alert(error.message);
+
     setLoading(false);
+
+    router.push("/");
   }
 
   return (

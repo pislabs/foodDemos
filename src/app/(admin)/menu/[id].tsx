@@ -2,7 +2,6 @@ import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -13,6 +12,7 @@ import { useCart } from "@/providers/CartProvider";
 import { PizzaSize } from "@/types";
 
 import { useProduct } from "@/api/products";
+import RemoteImage from "@/components/RemoteImage";
 import Colors from "@/constants/Colors";
 import { defaultPizzaImage } from "@components/ProductListItem";
 import { FontAwesome } from "@expo/vector-icons";
@@ -63,10 +63,16 @@ export const ProductDetailsScreen = () => {
         }}
       />
 
-      <Image
+      {/* <Image
         source={{ uri: product.image || defaultPizzaImage }}
         style={styles.image}
-      ></Image>
+      ></Image> */}
+
+      <RemoteImage
+        path={product.image}
+        fallback={defaultPizzaImage}
+        style={styles.image}
+      />
 
       <Text style={styles.title}>{product.name}</Text>
       <Text style={styles.price}>${product.price}</Text>

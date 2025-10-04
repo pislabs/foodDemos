@@ -14,6 +14,8 @@ const index = () => {
     return <ActivityIndicator />;
   }
 
+  console.log("session --------->", session);
+
   if (!session) {
     return <Redirect href={"/sign-in"} />;
   }
